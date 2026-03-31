@@ -2,19 +2,21 @@ const carouselContent = {
   products: [
     {
       type: "live",
-      image: "./assets/product-signature.svg",
-      imageAlt: "Signature Page preview",
-      title: "Signature Page",
-      description: "첫 인상을 가장 선명하게 남기는 대표 랜딩 페이지.",
-      tag: "Brand landing",
+      image: "./assets/flow-reference.png",
+      imageAlt: "Flow reference visual",
+      title: "Flow Automator",
+      description: "구글 Flow 이미지 자동생성기",
+      tags: ["Auto", "Chrome Extension", "YouTube"],
+      link: "./products/flow-automator.html",
     },
     {
       type: "live",
-      image: "./assets/product-archive.svg",
-      imageAlt: "Brand Archive preview",
-      title: "Brand Archive",
-      description: "브랜드 스토리와 작업 결과를 차분히 축적하는 아카이브형 페이지.",
-      tag: "Editorial layout",
+      image: "./assets/product-prompt-length.webp",
+      imageAlt: "Prompt Length Matcher preview",
+      title: "Prompt Length Matcher",
+      description: "목표 글자 수에 정확히 맞을 때까지 문장을 자동으로 다듬어주는 프롬프트.",
+      tags: ["ChatGPT", "Gemini", "Claude", "Prompt"],
+      link: "./products/prompt-length-matcher.html",
     },
     {
       type: "soon",
@@ -55,20 +57,31 @@ const carouselContent = {
 
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-function createCard(item, theme, index) {
+function createCard(item, theme, index, total) {
   const article = document.createElement("article");
   article.className = `orbit-card theme-${theme}`;
   article.dataset.type = item.type;
   article.dataset.index = String(index);
+  const cardNumber = `${String(index + 1).padStart(2, "0")}/${String(total).padStart(2, "0")}`;
+  const tags = Array.isArray(item.tags) ? item.tags : item.tag ? [item.tag] : [];
+  const tagsHtml = tags.map((label) => `<span class="card-tag">${label}</span>`).join("");
+  const visualInner = item.link
+    ? `<a class="card-visual-link" href="${item.link}" aria-label="${item.title} 상세 페이지 보기">
+         <img src="${item.image}" alt="${item.imageAlt}" loading="lazy" decoding="async" />
+       </a>`
+    : `<img src="${item.image}" alt="${item.imageAlt}" loading="lazy" decoding="async" />`;
 
   article.innerHTML = `
     <div class="card-visual">
-      <img src="${item.image}" alt="${item.imageAlt}" loading="lazy" decoding="async" />
+      ${visualInner}
     </div>
     <div class="card-content">
-      <h3>${item.title}</h3>
+      <div class="card-title-row">
+        <h3>${item.title}</h3>
+        <span class="card-number">${cardNumber}</span>
+      </div>
       <p class="card-description">${item.description}</p>
-      <span class="card-tag">${item.tag}</span>
+      <div class="card-tags">${tagsHtml}</div>
     </div>
   `;
 
@@ -110,7 +123,7 @@ function initCarousel(root) {
   let timer = null;
 
   const cards = items.map((item, index) => {
-    const card = createCard(item, theme, index);
+    const card = createCard(item, theme, index, items.length);
     track.appendChild(card);
     return card;
   });
@@ -173,8 +186,8 @@ function initSectionObserver() {
       });
     },
     {
-      threshold: 0.18,
-      rootMargin: "0px 0px -10% 0px",
+      threshold: 0.02,
+      rootMargin: "0px 0px -2% 0px",
     }
   );
 
@@ -213,6 +226,7 @@ function initSectionScrollFx() {
 
 function initNavObserver() {
   const links = Array.from(document.querySelectorAll("[data-nav-link]"));
+  if (!links.length) return;
   const map = new Map(links.map((link) => [link.dataset.navLink, link]));
   const sections = document.querySelectorAll("[data-section]");
 
@@ -238,6 +252,36 @@ function initNavObserver() {
   );
 
   sections.forEach((section) => observer.observe(section));
+}
+
+function initScrollTopButton() {
+  const button = document.querySelector("[data-scroll-top]");
+  if (!button) return;
+
+  let ticking = false;
+
+  function update() {
+    const isVisible = window.scrollY > 420;
+    button.classList.toggle("is-visible", isVisible);
+    ticking = false;
+  }
+
+  function requestUpdate() {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(update);
+  }
+
+  button.addEventListener("click", () => {
+    window.scrollTo({
+      top: 0,
+      behavior: reduceMotion ? "auto" : "smooth",
+    });
+  });
+
+  window.addEventListener("scroll", requestUpdate, { passive: true });
+  window.addEventListener("resize", requestUpdate);
+  update();
 }
 
 function initHeroTilt() {
@@ -499,7 +543,7 @@ function initHeroNeuralCanvas() {
 
 document.querySelectorAll("[data-carousel]").forEach(initCarousel);
 initSectionObserver();
-initSectionScrollFx();
 initNavObserver();
 initHeroNeuralCanvas();
 initHeroTilt();
+initScrollTopButton();

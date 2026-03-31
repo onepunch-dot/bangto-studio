@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prompt Length Matcher | Product Detail</title>
+    <meta
+      name="description"
+      content="Prompt Length Matcher 상세 페이지. 목표 글자 수까지 자동 보정하는 프롬프트 템플릿."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="stylesheet" href="./flow-automator.css" />
+  </head>
+  <body class="flow-detail-page">
+    <div class="flow-page-shell">
+      <header class="flow-header">
+        <a class="flow-back" href="../index.html#products">&larr; Back</a>
+      </header>
+
+      <main class="flow-main">
+        <section class="flow-hero">
+          <div class="flow-hero-copy">
+            <p class="flow-kicker">PROMPT · WRITING</p>
+            <h1>Prompt Length Matcher</h1>
+            <p class="flow-summary">글자 수 자동 보정 프롬프트</p>
+            <p class="flow-description">
+              원하는 글자 수를 입력하면 기준에 맞을 때까지 문장을 자동으로 조정합니다.
+              ChatGPT, Gemini, Claude에서 바로 붙여 써서 결과 길이를 정밀하게 맞출 수 있습니다.
+            </p>
+          </div>
+          <div class="flow-hero-visual" data-tilt>
+            <img src="../assets/product-prompt-length.webp" alt="Prompt Length Matcher visual" />
+          </div>
+        </section>
+
+        <section class="flow-spec-grid">
+          <article class="flow-spec-card">
+            <span class="flow-spec-label">01</span>
+            <h2>Target Count</h2>
+            <p>목표 글자 수를 기준값으로 설정하고 시작합니다.</p>
+          </article>
+          <article class="flow-spec-card">
+            <span class="flow-spec-label">02</span>
+            <h2>Iterative Match</h2>
+            <p>조건을 충족할 때까지 문장을 단계적으로 재작성합니다.</p>
+          </article>
+          <article class="flow-spec-card">
+            <span class="flow-spec-label">03</span>
+            <h2>Output Check</h2>
+            <p>최종 문장과 실제 글자 수를 함께 반환해 바로 검수할 수 있습니다.</p>
+          </article>
+        </section>
+
+        <section class="prompt-template">
+          <div class="prompt-snippet-shell">
+            <div class="prompt-snippet-topbar">
+              <div class="prompt-snippet-meta">
+                <span class="snippet-dot" aria-hidden="true"></span>
+                <span class="snippet-name">Prompt Template</span>
+                <span class="snippet-type">Plain Text</span>
+              </div>
+              <button
+                type="button"
+                class="prompt-copy-button"
+                data-copy-target="prompt-template-code"
+                aria-label="Copy prompt template"
+                title="Copy"
+              >
+                <span class="copy-icon" aria-hidden="true">⧉</span>
+              </button>
+            </div>
+            <pre class="prompt-code" id="prompt-template-code"><code>[분량 규칙]
+반드시 Python 코드로 len()을 실행해 글자 수를 확인하세요.
+목표 글자 수에 미달하면 문장을 수정한 뒤 다시 len()으로 재확인하고, 최종 답변에는 완성 문장과 Python 코드, 실행 결과를 함께 제출하세요.
+최소 글자 수: {5000자}</code></pre>
+            <p class="prompt-copy-feedback" data-copy-feedback aria-live="polite"></p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      const panel = document.querySelector("[data-tilt]");
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (panel && !reduceMotion) {
+        panel.addEventListener("pointermove", (event) => {
+          const rect = panel.getBoundingClientRect();
+          const px = (event.clientX - rect.left) / rect.width - 0.5;
+          const py = (event.clientY - rect.top) / rect.height - 0.5;
+          panel.style.transform = `rotateX(${(-py * 8).toFixed(2)}deg) rotateY(${(px * 10).toFixed(2)}deg)`;
+        });
+
+        panel.addEventListener("pointerleave", () => {
+          panel.style.transform = "rotateX(0deg) rotateY(0deg)";
+        });
+      }
+
+      const copyButtons = document.querySelectorAll("[data-copy-target]");
+
+      async function writeClipboard(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+          return true;
+        }
+
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.setAttribute("readonly", "");
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        try {
+          return document.execCommand("copy");
+        } finally {
+          document.body.removeChild(textarea);
+        }
+      }
+
+      copyButtons.forEach((copyButton) => {
+        copyButton.addEventListener("click", async () => {
+          const targetId = copyButton.getAttribute("data-copy-target");
+          const target = targetId ? document.getElementById(targetId) : null;
+          if (!target) return;
+
+          const promptText = target.innerText.trim();
+          const copyIcon = copyButton.querySelector(".copy-icon");
+          const originalIcon = copyIcon ? copyIcon.textContent : "⧉";
+          const copyFeedback = copyButton.closest(".prompt-snippet-shell")?.querySelector("[data-copy-feedback]");
+
+          try {
+            const copied = await writeClipboard(promptText);
+            if (!copied) throw new Error("copy failed");
+            if (copyIcon) copyIcon.textContent = "✓";
+            copyButton.classList.add("is-copied");
+            if (copyFeedback) copyFeedback.textContent = "프롬프트가 클립보드에 복사되었습니다.";
+          } catch (_error) {
+            if (copyIcon) copyIcon.textContent = "!";
+            copyButton.classList.remove("is-copied");
+            if (copyFeedback) copyFeedback.textContent = "복사에 실패했습니다. 한 번 더 시도해 주세요.";
+          } finally {
+            window.setTimeout(() => {
+              if (copyIcon) copyIcon.textContent = originalIcon;
+              copyButton.classList.remove("is-copied");
+            }, 1400);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

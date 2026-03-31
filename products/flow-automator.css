@@ -1,0 +1,371 @@
+.flow-detail-page {
+  min-height: 100vh;
+}
+
+.flow-page-shell {
+  width: min(1280px, calc(100vw - 40px));
+  margin: 28px auto 90px;
+}
+
+.flow-header {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.flow-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(12, 13, 15, 0.7);
+  color: var(--soft);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: color 220ms ease, border-color 220ms ease, transform 220ms ease;
+}
+
+.flow-back:hover,
+.flow-back:focus-visible {
+  color: var(--text);
+  border-color: rgba(255, 255, 255, 0.26);
+  transform: translateY(-1px);
+}
+
+.flow-main {
+  margin-top: 28px;
+  display: grid;
+  gap: clamp(54px, 7vh, 96px);
+}
+
+.flow-hero {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(340px, 1.05fr);
+  gap: clamp(24px, 3vw, 42px);
+  align-items: center;
+}
+
+.flow-kicker {
+  margin: 0 0 14px;
+  color: var(--soft);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.flow-hero h1 {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: clamp(40px, 6vw, 78px);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.028em;
+}
+
+.flow-summary {
+  margin: 16px 0 0;
+  color: #f3ded3;
+  font-size: clamp(20px, 2.2vw, 28px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.flow-description {
+  margin: 20px 0 0;
+  max-width: 56ch;
+  color: var(--muted);
+  font-size: clamp(15px, 1.2vw, 18px);
+  line-height: 1.7;
+}
+
+.flow-hero-visual {
+  position: relative;
+  padding: 18px;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 44%),
+    rgba(10, 11, 13, 0.76);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 24px 60px rgba(0, 0, 0, 0.45);
+  transition: transform 320ms ease;
+  transform-style: preserve-3d;
+}
+
+.flow-hero-visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(circle at 40% 20%, rgba(143, 164, 255, 0.14), transparent 52%);
+}
+
+.flow-hero-visual img {
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  display: block;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.flow-spec-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(14px, 2vw, 22px);
+}
+
+.flow-spec-card {
+  padding: 22px 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.035), transparent 52%),
+    rgba(8, 9, 12, 0.72);
+}
+
+.flow-spec-label {
+  color: var(--soft);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+}
+
+.flow-spec-card h2 {
+  margin: 12px 0 0;
+  font-family: var(--font-body);
+  font-size: clamp(22px, 1.9vw, 28px);
+  line-height: 1.1;
+  letter-spacing: -0.014em;
+}
+
+.flow-spec-card p {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.flow-download {
+  padding: clamp(30px, 4vw, 48px) 0 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+.flow-download p {
+  margin: 0;
+  color: var(--muted);
+  font-size: clamp(15px, 1.2vw, 18px);
+}
+
+.flow-download-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.flow-download-actions .button {
+  min-width: 156px;
+  min-height: 52px;
+  padding: 14px 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+}
+
+.flow-download-actions .button-primary {
+  color: #101012;
+  box-shadow:
+    0 18px 42px rgba(215, 154, 129, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.24);
+}
+
+.flow-download-actions .button-secondary {
+  color: #f3f0eb;
+  border-color: rgba(255, 255, 255, 0.3);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0) 68%),
+    rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 14px 36px rgba(0, 0, 0, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+.flow-download-actions .button-secondary:visited {
+  color: #f3f0eb;
+}
+
+.flow-download-actions .button-secondary:hover,
+.flow-download-actions .button-secondary:focus-visible {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.48);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0) 70%),
+    rgba(255, 255, 255, 0.16);
+}
+
+.prompt-template {
+  padding: clamp(30px, 4vw, 48px) 0 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.prompt-snippet-shell {
+  width: min(640px, 100%);
+  margin: 0 auto;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 44%),
+    rgba(6, 8, 11, 0.92);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 20px 50px rgba(0, 0, 0, 0.34);
+  overflow: hidden;
+}
+
+.prompt-snippet-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 56px;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 70%),
+    rgba(12, 15, 20, 0.94);
+}
+
+.prompt-snippet-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.snippet-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #9bb5ff;
+  box-shadow: 0 0 0 4px rgba(155, 181, 255, 0.12);
+}
+
+.snippet-name {
+  color: #f0ece7;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+.snippet-type {
+  padding: 4px 8px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--soft);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.prompt-copy-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border-radius: 11px;
+  border: 1px solid rgba(129, 184, 255, 0.62);
+  background:
+    linear-gradient(180deg, rgba(129, 184, 255, 0.24), rgba(129, 184, 255, 0) 72%),
+    rgba(129, 184, 255, 0.14);
+  color: #bdddff;
+  cursor: pointer;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, color 180ms ease, box-shadow 180ms ease;
+}
+
+.copy-icon {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.prompt-copy-button:hover,
+.prompt-copy-button:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(155, 206, 255, 0.8);
+  background:
+    linear-gradient(180deg, rgba(155, 206, 255, 0.32), rgba(155, 206, 255, 0) 70%),
+    rgba(155, 206, 255, 0.16);
+  box-shadow: 0 0 0 3px rgba(124, 184, 255, 0.22);
+}
+
+.prompt-copy-button.is-copied {
+  color: #e9fff1;
+  border-color: rgba(145, 246, 196, 0.62);
+  background:
+    linear-gradient(180deg, rgba(145, 246, 196, 0.3), rgba(145, 246, 196, 0) 70%),
+    rgba(145, 246, 196, 0.14);
+}
+
+.prompt-code {
+  margin: 0;
+  max-height: 220px;
+  overflow: auto;
+  padding: 18px 18px;
+  border-radius: 0;
+  border: 0;
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.015), transparent 52%),
+    rgba(5, 7, 10, 0.94);
+  color: #e8e3dd;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.64;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.prompt-copy-feedback {
+  min-height: 20px;
+  margin: 0;
+  padding: 8px 14px 12px;
+  color: var(--soft);
+  font-size: 12px;
+  background: rgba(5, 7, 10, 0.86);
+}
+
+@media (max-width: 920px) {
+  .flow-page-shell {
+    width: min(100vw - 24px, 100%);
+  }
+
+  .flow-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .flow-spec-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .prompt-snippet-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flow Automator | Product Detail</title>
+    <meta name="description" content="Flow Automator 제품 상세 페이지. 구글 Flow 기반 이미지 자동 생성 워크플로우." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="stylesheet" href="./flow-automator.css" />
+  </head>
+  <body class="flow-detail-page">
+    <div class="flow-page-shell">
+      <header class="flow-header">
+        <a class="flow-back" href="../index.html#products">&larr; Back</a>
+      </header>
+
+      <main class="flow-main">
+        <section class="flow-hero">
+          <div class="flow-hero-copy">
+            <p class="flow-kicker">AUTOMATION · YOUTUBE</p>
+            <h1>Flow Automator</h1>
+            <p class="flow-summary">구글 Flow 기반 이미지 자동 생성 워크플로우</p>
+            <p class="flow-description">
+              해당 확장 프로그램으로 구글 Flow 사이트에서 자동으로 이미지를 생성할 수 있습니다.
+            </p>
+          </div>
+          <div class="flow-hero-visual" data-tilt>
+            <img src="../assets/flow-reference.png" alt="Flow reference visual" />
+          </div>
+        </section>
+
+        <section class="flow-spec-grid">
+          <article class="flow-spec-card">
+            <span class="flow-spec-label">01</span>
+            <h2>Scene Queue</h2>
+            <p>씬 프롬프트 일괄 등록·순차 실행</p>
+          </article>
+          <article class="flow-spec-card">
+            <span class="flow-spec-label">02</span>
+            <h2>Auto Repeat</h2>
+            <p>씬별 반복 생성</p>
+          </article>
+          <article class="flow-spec-card">
+            <span class="flow-spec-label">03</span>
+            <h2>Slot Guard</h2>
+            <p>대기 시간 조절 통한 안전 설정</p>
+          </article>
+        </section>
+
+        <section class="flow-download">
+          <p>바로 실행할 수 있는 파일과 사용 가이드를 확인하세요.</p>
+          <div class="flow-download-actions">
+            <a
+              class="button button-primary"
+              href="https://drive.google.com/file/d/17NNXnXfiXay2N-u8nP1eyoIOtANj0dJ9/view?usp=sharing"
+              target="_blank"
+              rel="noreferrer"
+            >
+              download
+            </a>
+            <a
+              class="button button-secondary"
+              href="https://www.youtube.com/watch?v=zxtnBAR1bdY"
+              target="_blank"
+              rel="noreferrer"
+            >
+              how to
+            </a>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      const panel = document.querySelector("[data-tilt]");
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (panel && !reduceMotion) {
+        panel.addEventListener("pointermove", (event) => {
+          const rect = panel.getBoundingClientRect();
+          const px = (event.clientX - rect.left) / rect.width - 0.5;
+          const py = (event.clientY - rect.top) / rect.height - 0.5;
+          panel.style.transform = `rotateX(${(-py * 8).toFixed(2)}deg) rotateY(${(px * 10).toFixed(2)}deg)`;
+        });
+
+        panel.addEventListener("pointerleave", () => {
+          panel.style.transform = "rotateX(0deg) rotateY(0deg)";
+        });
+      }
+    </script>
+  </body>
+</html>
