@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Name | Brand Landing</title>
+    <meta
+      name="description"
+      content="감성적인 브랜딩 페이지 콘셉트. 히어로, 짧은 약력, 오비탈 카드 상품과 서비스, 문의 섹션으로 구성된 정적 랜딩 페이지."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="ambient ambient-one"></div>
+      <div class="ambient ambient-two"></div>
+      <div class="ambient ambient-three"></div>
+
+      <header class="site-header">
+        <a class="brand" href="#top" aria-label="Home">
+          <span class="brand-dot"></span>
+          <span class="brand-name">Your Name</span>
+        </a>
+        <nav class="site-nav" aria-label="Primary">
+          <a href="#about" data-nav-link="about">About</a>
+          <a href="#products" data-nav-link="products">Products</a>
+          <a href="#services" data-nav-link="services">Services</a>
+          <a href="#contact" data-nav-link="contact">Contact</a>
+        </nav>
+      </header>
+
+      <main id="top">
+        <section class="hero section-reveal" data-section="top">
+          <div class="hero-visual" aria-hidden="true">
+            <div class="hero-visual-frame">
+              <div class="hero-sculpture-stage">
+                <div class="hero-ripple-layer" data-hero-ripples aria-hidden="true"></div>
+                <div class="hero-sculpture-tilt">
+                  <div class="hero-sculpture neural-sculpture" data-neural-sculpture>
+                    <canvas class="neural-canvas" data-neural-canvas></canvas>
+                    <div class="neural-cursor-glow"></div>
+                    <div class="neural-vignette"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="about" class="about section-reveal" data-section="about">
+          <div class="section-head">
+            <h2>짧게 남기고, 선명하게.</h2>
+          </div>
+
+          <div class="about-layout">
+            <article class="about-editorial">
+              <p class="editorial-copy">
+                브랜드와 화면의 리듬을
+                <span>조용히 다듬습니다.</span>
+              </p>
+            </article>
+
+            <article class="about-bio">
+              <div class="bio-row">
+                <span class="bio-year">2015 - Now</span>
+                <p>Independent designer, brand direction, digital landing composition.</p>
+              </div>
+              <div class="bio-row">
+                <span class="bio-year">Based in Seoul</span>
+                <p>작은 브랜드의 첫 페이지, 서비스 소개, 포트폴리오형 경험 설계.</p>
+              </div>
+              <div class="bio-row">
+                <span class="bio-year">Focus</span>
+                <p>랜딩 구조, 타이포그래피, 무드 설계, 조용한 전환 흐름.</p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="products" class="carousel-section section-reveal" data-section="products">
+          <div class="section-head">
+            <h2>Selected pieces.</h2>
+          </div>
+
+          <div class="carousel-shell" data-carousel="products" data-theme="warm">
+            <div class="orbit orbit-large"></div>
+            <div class="orbit orbit-small"></div>
+
+            <div class="carousel-top">
+              <div class="carousel-controls">
+                <button class="control" type="button" data-dir="-1" aria-label="Previous product">
+                  <span>&larr;</span>
+                </button>
+                <button class="control" type="button" data-dir="1" aria-label="Next product">
+                  <span>&rarr;</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="orbit-scene">
+              <div class="orbit-track" data-track></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="services" class="carousel-section section-reveal" data-section="services">
+          <div class="section-head">
+            <h2>Soft launch services.</h2>
+          </div>
+
+          <div class="carousel-shell" data-carousel="services" data-theme="cool">
+            <div class="orbit orbit-large"></div>
+            <div class="orbit orbit-small"></div>
+
+            <div class="carousel-top">
+              <div class="carousel-controls">
+                <button class="control" type="button" data-dir="-1" aria-label="Previous service">
+                  <span>&larr;</span>
+                </button>
+                <button class="control" type="button" data-dir="1" aria-label="Next service">
+                  <span>&rarr;</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="orbit-scene">
+              <div class="orbit-track" data-track></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="contact" class="contact section-reveal" data-section="contact">
+          <div class="contact-card">
+            <h2>
+              좋은 인상은
+              <span>첫 문장부터 시작됩니다.</span>
+            </h2>
+            <a class="button button-primary" href="mailto:hello@example.com">Send Inquiry</a>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

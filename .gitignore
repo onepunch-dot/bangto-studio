@@ -1,0 +1,8 @@
+.DS_Store
+node_modules/
+.vercel/
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.mp4
