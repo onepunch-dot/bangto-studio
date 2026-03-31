@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-label="Next piece teaser visual">
+  <defs>
+    <linearGradient id="bg" x1="0.1" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#090b12"/>
+      <stop offset="100%" stop-color="#040507"/>
+    </linearGradient>
+    <radialGradient id="cool" cx="0.64" cy="0.52" r="0.5">
+      <stop offset="0%" stop-color="#8093e8" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#8093e8" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <rect width="1600" height="1000" fill="url(#cool)"/>
+  <g opacity="0.26" stroke="#c0cbf8" stroke-width="2" fill="none">
+    <path d="M180 760 C410 360 940 990 1420 220"/>
+    <path d="M220 250 C430 190 620 390 760 300 C960 170 1160 270 1400 640"/>
+    <path d="M160 580 C490 580 870 420 1360 510"/>
+  </g>
+  <g fill="#d7e0ff" opacity="0.78">
+    <circle cx="220" cy="760" r="7"/>
+    <circle cx="470" cy="520" r="6"/>
+    <circle cx="710" cy="640" r="6"/>
+    <circle cx="980" cy="430" r="7"/>
+    <circle cx="1240" cy="470" r="6"/>
+    <circle cx="1410" cy="250" r="7"/>
+  </g>
+  <g opacity="0.16" fill="#111829">
+    <rect x="680" y="250" width="470" height="300" rx="26"/>
+  </g>
+</svg>

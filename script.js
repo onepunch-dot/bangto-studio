@@ -1,60 +1,54 @@
 const carouselContent = {
   products: [
     {
-      status: "Live",
-      statusClass: "live",
       type: "live",
+      image: "./assets/product-signature.svg",
+      imageAlt: "Signature Page preview",
       title: "Signature Page",
-      description: "첫 인상을 위해 정제한 대표형 랜딩. 브랜드의 공기와 결을 가장 선명하게 담는 페이지.",
-      label: "Brand landing",
-      detail: "Selected piece",
+      description: "첫 인상을 가장 선명하게 남기는 대표 랜딩 페이지.",
+      tag: "Brand landing",
     },
     {
-      status: "Live",
-      statusClass: "live",
       type: "live",
+      image: "./assets/product-archive.svg",
+      imageAlt: "Brand Archive preview",
       title: "Brand Archive",
-      description: "브랜드 스토리와 작업의 리듬을 차분하게 쌓아 보여주는 아카이브형 페이지.",
-      label: "Editorial layout",
-      detail: "Curated structure",
+      description: "브랜드 스토리와 작업 결과를 차분히 축적하는 아카이브형 페이지.",
+      tag: "Editorial layout",
     },
     {
-      status: "Coming Soon",
-      statusClass: "soon",
       type: "soon",
+      image: "./assets/product-next.svg",
+      imageAlt: "Next Piece teaser",
       title: "Next Piece",
-      description: "다음 챕터를 위한 자리. 지금은 낮은 톤으로 남겨 두고, 준비가 끝나면 중심으로 올라옵니다.",
-      label: "In progress",
-      detail: "Quiet teaser",
+      description: "다음 챕터를 위한 티저형 랜딩 구성안.",
+      tag: "Coming soon",
     },
   ],
   services: [
     {
-      status: "Open",
-      statusClass: "open",
       type: "live",
+      image: "./assets/service-direction.svg",
+      imageAlt: "Direction Session visual",
       title: "Direction Session",
-      description: "브랜드의 방향, 톤, 랜딩 구조를 한 번에 정리하는 집중 세션. 지금 바로 진행 가능한 현재 서비스.",
-      label: "Current service",
-      detail: "Available now",
+      description: "브랜드 톤과 랜딩 구조를 한 번에 정리하는 집중 세션.",
+      tag: "Available now",
     },
     {
-      status: "Coming Soon",
-      statusClass: "soon",
       type: "soon",
+      image: "./assets/service-refresh.svg",
+      imageAlt: "Identity Refresh teaser",
       title: "Identity Refresh",
-      description: "이미 가진 인상을 조금 더 선명하게 다듬는 후속 서비스. 준비가 끝나면 조용히 합류합니다.",
-      label: "Soon",
-      detail: "Soft launch",
+      description: "기존 브랜드 인상을 가볍게 재정렬하는 리프레시 서비스.",
+      tag: "Coming soon",
     },
     {
-      status: "Coming Soon",
-      statusClass: "soon",
       type: "soon",
+      image: "./assets/service-launch.svg",
+      imageAlt: "Launch Companion teaser",
       title: "Launch Companion",
-      description: "오픈 이후의 분위기와 디테일을 정리하는 지원형 서비스. 아직은 방향만 남겨 둡니다.",
-      label: "Soon",
-      detail: "Soft launch",
+      description: "오픈 전후 디테일과 톤을 함께 맞추는 동행형 지원.",
+      tag: "Coming soon",
     },
   ],
 };
@@ -68,17 +62,13 @@ function createCard(item, theme, index) {
   article.dataset.index = String(index);
 
   article.innerHTML = `
-    <div>
-      <span class="card-status ${item.statusClass}">${item.status}</span>
-      <h3>${item.title}</h3>
-      <p>${item.description}</p>
+    <div class="card-visual">
+      <img src="${item.image}" alt="${item.imageAlt}" loading="lazy" decoding="async" />
     </div>
-    <div class="card-meta">
-      <div>
-        <span class="meta-label">${item.label}</span>
-        <span class="meta-highlight">${item.detail}</span>
-      </div>
-      <span class="meta-index">${String(index + 1).padStart(2, "0")}</span>
+    <div class="card-content">
+      <h3>${item.title}</h3>
+      <p class="card-description">${item.description}</p>
+      <span class="card-tag">${item.tag}</span>
     </div>
   `;
 
@@ -133,13 +123,8 @@ function initCarousel(root) {
       card.setAttribute("aria-hidden", position === "center" ? "false" : "true");
     });
 
-    if (currentTitle) {
-      currentTitle.textContent = items[active].title;
-    }
-
-    if (currentIndex) {
-      currentIndex.textContent = `${String(active + 1).padStart(2, "0")} / ${String(items.length).padStart(2, "0")}`;
-    }
+    if (currentTitle) currentTitle.textContent = items[active].title;
+    if (currentIndex) currentIndex.textContent = `${String(active + 1).padStart(2, "0")} / ${String(items.length).padStart(2, "0")}`;
   }
 
   function go(direction) {
