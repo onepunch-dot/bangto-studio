@@ -30,34 +30,34 @@ const carouselContent = {
       image: productNextImage,
       imageAlt: "Next Piece teaser",
       title: "Next Piece",
-      description: "다음 챕터를 위한 티저형 랜딩 구성안.",
-      tag: "Coming soon",
+      description: "AI, Auto, YouTube, Earn",
+      tag: "Comming soon",
     },
   ],
   services: [
     {
-      type: "live",
+      type: "soon",
       image: serviceDirectionImage,
-      imageAlt: "Direction Session visual",
-      title: "Direction Session",
-      description: "브랜드 톤과 랜딩 구조를 한 번에 정리하는 집중 세션.",
-      tag: "Available now",
+      imageAlt: "Service preview 01",
+      title: "Openclaw Setup",
+      description: "",
+      tag: "Comming soon",
     },
     {
       type: "soon",
       image: serviceRefreshImage,
-      imageAlt: "Identity Refresh teaser",
-      title: "Identity Refresh",
-      description: "기존 브랜드 인상을 가볍게 재정렬하는 리프레시 서비스.",
-      tag: "Coming soon",
+      imageAlt: "Service preview 02",
+      title: "Next Piece",
+      description: "",
+      tag: "Comming soon",
     },
     {
       type: "soon",
       image: serviceLaunchImage,
-      imageAlt: "Launch Companion teaser",
-      title: "Launch Companion",
-      description: "오픈 전후 디테일과 톤을 함께 맞추는 동행형 지원.",
-      tag: "Coming soon",
+      imageAlt: "Service preview 03",
+      title: "Next Piece",
+      description: "",
+      tag: "Comming soon",
     },
   ],
 };
@@ -347,24 +347,15 @@ function initHeroTilt() {
   visual.addEventListener("pointerleave", reset);
 }
 
-function initHeroScrollCue() {
-  const cue = document.querySelector("[data-hero-scroll-cue]");
-  const button = document.querySelector("[data-hero-scroll]");
-  const nextSection = document.getElementById("about");
-  if (!cue || !button || !nextSection) return;
-
-  button.addEventListener("click", () => {
-    nextSection.scrollIntoView({
-      behavior: reduceMotion ? "auto" : "smooth",
-      block: "start",
-    });
-  });
+function initHeroScrollBand() {
+  const band = document.querySelector("[data-hero-scroll-band]");
+  if (!band) return;
 
   let ticking = false;
 
   function update() {
     const hidden = window.scrollY > Math.max(68, window.innerHeight * 0.09);
-    cue.classList.toggle("is-hidden", hidden);
+    band.classList.toggle("is-hidden", hidden);
     ticking = false;
   }
 
@@ -585,5 +576,5 @@ initSectionObserver();
 initNavObserver();
 initHeroNeuralCanvas();
 initHeroTilt();
-initHeroScrollCue();
+initHeroScrollBand();
 initScrollTopButton();

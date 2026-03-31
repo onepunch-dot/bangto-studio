@@ -50,13 +50,50 @@
   align-items: center;
 }
 
-.flow-kicker {
-  margin: 0 0 14px;
-  color: var(--soft);
+.flow-meta-row {
+  margin-bottom: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.flow-tags {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.flow-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  color: #d8dce7;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+}
+
+.flow-version {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(143, 164, 255, 0.28);
+  background:
+    linear-gradient(180deg, rgba(143, 164, 255, 0.14), rgba(143, 164, 255, 0) 75%),
+    rgba(143, 164, 255, 0.08);
+  color: #c8d4ff;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
@@ -164,11 +201,12 @@
 .flow-download p {
   margin: 0;
   color: var(--muted);
-  font-size: clamp(15px, 1.2vw, 18px);
+  font-size: clamp(17px, 1.4vw, 22px);
+  line-height: 1.55;
 }
 
 .flow-download-actions {
-  margin-top: 20px;
+  margin-top: 24px;
   display: flex;
   justify-content: center;
   gap: 12px;
@@ -176,27 +214,31 @@
 }
 
 .flow-download-actions .button {
-  min-width: 156px;
-  min-height: 52px;
-  padding: 14px 20px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.13em;
+  min-width: 176px;
+  min-height: 54px;
+  padding: 14px 24px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  line-height: 1;
 }
 
 .flow-download-actions .button-primary {
   color: #101012;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.34);
   box-shadow:
     0 18px 42px rgba(215, 154, 129, 0.22),
     inset 0 1px 0 rgba(255, 255, 255, 0.24);
 }
 
 .flow-download-actions .button-secondary {
-  color: #f3f0eb;
-  border-color: rgba(255, 255, 255, 0.3);
+  color: #fbfdff;
+  text-shadow: 0 0 12px rgba(190, 205, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.36);
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0) 68%),
-    rgba(255, 255, 255, 0.1);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0) 68%),
+    rgba(255, 255, 255, 0.12);
   box-shadow:
     0 14px 36px rgba(0, 0, 0, 0.32),
     inset 0 1px 0 rgba(255, 255, 255, 0.16);
@@ -362,6 +404,29 @@
 
   .flow-spec-grid {
     grid-template-columns: 1fr;
+  }
+
+  .flow-meta-row {
+    gap: 8px;
+  }
+
+  .flow-version {
+    min-height: 22px;
+    padding: 3px 9px;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+  }
+
+  .flow-download p {
+    font-size: clamp(16px, 3.9vw, 19px);
+  }
+
+  .flow-download-actions .button {
+    min-width: 158px;
+    min-height: 50px;
+    padding: 12px 20px;
+    font-size: 14px;
+    letter-spacing: 0.02em;
   }
 
   .prompt-snippet-topbar {

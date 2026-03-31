@@ -34,11 +34,14 @@
 html {
   scroll-behavior: smooth;
   background: #000;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
+  max-width: 100%;
   color: var(--text);
   background: linear-gradient(180deg, #010101 0%, #000000 100%);
   font-family: var(--font-body);
@@ -46,6 +49,7 @@ body {
   text-rendering: optimizeLegibility;
   word-break: keep-all;
   overscroll-behavior-y: none;
+  overflow-x: hidden;
 }
 
 body::before,
@@ -79,9 +83,10 @@ a {
 
 .page-shell {
   position: relative;
-  width: min(1460px, calc(100vw - 40px));
+  width: min(1460px, calc(100% - 24px));
   margin: 20px auto 80px;
   isolation: isolate;
+  overflow-x: clip;
 }
 
 .page-shell::before,
@@ -288,110 +293,54 @@ main > .section-reveal + .section-reveal {
   padding: 34px 0 14px;
 }
 
-.hero-scroll-cue {
-  position: absolute;
-  left: 50%;
-  bottom: clamp(22px, 3.8vh, 40px);
-  z-index: 12;
-  display: grid;
-  justify-items: center;
-  gap: 8px;
-  transform: translateX(-50%);
+.hero-scroll-band {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 34px;
+  pointer-events: none;
+  z-index: 14;
   opacity: 0.86;
+  transform: translateY(0);
   transition: opacity 260ms ease, transform 260ms ease;
 }
 
-.hero-scroll-cue.is-hidden {
+.hero-scroll-band.is-hidden {
   opacity: 0;
-  transform: translate(-50%, 12px);
-  pointer-events: none;
+  transform: translateY(12px);
 }
 
-.hero-scroll-button {
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0) 72%),
-    rgba(9, 11, 15, 0.62);
-  box-shadow:
-    0 12px 24px rgba(0, 0, 0, 0.28),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  color: var(--text);
-  cursor: pointer;
-  backdrop-filter: blur(12px);
-  display: grid;
-  place-items: center;
-  transition: border-color 220ms ease, background 220ms ease, transform 220ms ease;
-  animation: hero-scroll-bob 2.05s cubic-bezier(0.22, 1, 0.36, 1) infinite;
-}
-
-.hero-scroll-button:hover,
-.hero-scroll-button:focus-visible {
-  border-color: rgba(255, 255, 255, 0.36);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0) 72%),
-    rgba(14, 17, 22, 0.8);
-}
-
-.hero-scroll-arrow {
-  width: 10px;
-  height: 10px;
-  border-right: 2px solid rgba(236, 238, 247, 0.92);
-  border-bottom: 2px solid rgba(236, 238, 247, 0.92);
-  transform: rotate(45deg) translateY(-1px);
-  filter: drop-shadow(0 0 10px rgba(143, 164, 255, 0.32));
-}
-
-.hero-scroll-label {
-  color: rgba(183, 188, 200, 0.84);
-  font-family: var(--font-mono);
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  animation: hero-scroll-label-pulse 2.2s ease-in-out infinite;
-}
-
-.hero-bottom-bounce {
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  width: min(340px, 58vw);
-  height: 20px;
-  transform: translateX(-50%);
-  pointer-events: none;
-  z-index: 9;
-}
-
-.hero-bottom-bounce::before,
-.hero-bottom-bounce::after {
+.hero-scroll-band::before,
+.hero-scroll-band::after {
   content: "";
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  border-radius: 999px;
+  left: 0;
+  right: 0;
+  transform-origin: center bottom;
 }
 
-.hero-bottom-bounce::before {
-  bottom: 7px;
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(166, 178, 214, 0.58), transparent);
-  opacity: 0.72;
-  animation: hero-edge-float 2.2s ease-in-out infinite;
-}
-
-.hero-bottom-bounce::after {
+.hero-scroll-band::before {
   bottom: 0;
-  width: min(180px, 42vw);
-  height: 10px;
-  background: radial-gradient(circle, rgba(140, 160, 240, 0.3), rgba(140, 160, 240, 0) 72%);
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(149, 169, 235, 0.18) 12%,
+    rgba(171, 190, 248, 0.72) 50%,
+    rgba(149, 169, 235, 0.18) 88%,
+    transparent 100%
+  );
+  filter: drop-shadow(0 0 10px rgba(129, 158, 255, 0.4));
+  animation: hero-band-bounce 1.7s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+
+.hero-scroll-band::after {
+  bottom: 0;
+  height: 26px;
+  background: radial-gradient(55% 70% at 50% 100%, rgba(116, 145, 238, 0.34), rgba(116, 145, 238, 0) 72%);
   filter: blur(4px);
-  opacity: 0.55;
-  animation: hero-edge-glow 2.2s ease-in-out infinite;
+  animation: hero-band-glow 1.7s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
 }
 
 .eyebrow,
@@ -901,50 +850,35 @@ main > .section-reveal + .section-reveal {
   }
 }
 
-@keyframes hero-scroll-bob {
+@keyframes hero-band-bounce {
   0%,
   100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(5px);
-  }
-  65% {
-    transform: translateY(-1px);
-  }
-}
-
-@keyframes hero-scroll-label-pulse {
-  0%,
-  100% {
-    opacity: 0.66;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-@keyframes hero-edge-float {
-  0%,
-  100% {
-    transform: translateX(-50%) translateY(0) scaleX(0.92);
+    transform: translateY(0) scaleX(0.94);
     opacity: 0.56;
   }
-  50% {
-    transform: translateX(-50%) translateY(-3px) scaleX(1);
-    opacity: 0.9;
+  34% {
+    transform: translateY(-7px) scaleX(1);
+    opacity: 1;
+  }
+  62% {
+    transform: translateY(2px) scaleX(0.96);
+    opacity: 0.72;
   }
 }
 
-@keyframes hero-edge-glow {
+@keyframes hero-band-glow {
   0%,
   100% {
-    transform: translateX(-50%) translateY(0) scale(0.92);
-    opacity: 0.42;
+    transform: translateY(0) scaleX(0.92);
+    opacity: 0.26;
   }
-  50% {
-    transform: translateX(-50%) translateY(-3px) scale(1.02);
-    opacity: 0.68;
+  34% {
+    transform: translateY(-8px) scaleX(1);
+    opacity: 0.52;
+  }
+  62% {
+    transform: translateY(0) scaleX(0.95);
+    opacity: 0.32;
   }
 }
 
@@ -1742,7 +1676,7 @@ main > .section-reveal + .section-reveal {
 
 @media (max-width: 920px) {
   .page-shell {
-    width: min(100vw - 20px, 100%);
+    width: calc(100% - 12px);
   }
 
   .site-header {
@@ -1830,6 +1764,10 @@ main > .section-reveal + .section-reveal {
 }
 
 @media (max-width: 680px) {
+  .page-shell {
+    width: calc(100% - 8px);
+  }
+
   .site-header {
     flex-wrap: wrap;
     border-radius: 28px;
@@ -1862,18 +1800,8 @@ main > .section-reveal + .section-reveal {
     width: min(330px, 90%);
   }
 
-  .hero-scroll-cue {
-    bottom: 14px;
-    gap: 6px;
-  }
-
-  .hero-scroll-button {
-    width: 40px;
-    height: 40px;
-  }
-
-  .hero-bottom-bounce {
-    width: min(260px, 72vw);
+  .hero-scroll-band {
+    height: 28px;
   }
 
   .section-head h2 {
@@ -1932,18 +1860,24 @@ main > .section-reveal + .section-reveal {
 
   .orbit-card.is-left {
     transform:
-      translate3d(-100%, 40px, -220px)
+      translate3d(-146%, 40px, -260px)
       rotateY(18deg)
       rotateZ(-2deg)
-      scale(0.72);
+      scale(0.66);
+    opacity: 0.06;
+    filter: blur(3px) saturate(0.6);
+    pointer-events: none;
   }
 
   .orbit-card.is-right {
     transform:
-      translate3d(0%, 40px, -220px)
+      translate3d(46%, 40px, -260px)
       rotateY(-18deg)
       rotateZ(2deg)
-      scale(0.72);
+      scale(0.66);
+    opacity: 0.06;
+    filter: blur(3px) saturate(0.6);
+    pointer-events: none;
   }
 
   .orbit-card h3 {
@@ -1977,10 +1911,8 @@ main > .section-reveal + .section-reveal {
     transform: none !important;
   }
 
-  .hero-scroll-button,
-  .hero-scroll-label,
-  .hero-bottom-bounce::before,
-  .hero-bottom-bounce::after {
+  .hero-scroll-band::before,
+  .hero-scroll-band::after {
     animation: none !important;
   }
 
