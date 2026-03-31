@@ -1,8 +1,15 @@
+const flowReferenceImage = new URL("./assets/flow-reference.png", import.meta.url).href;
+const promptLengthImage = new URL("./assets/product-prompt-length.webp", import.meta.url).href;
+const productNextImage = new URL("./assets/product-next.svg", import.meta.url).href;
+const serviceDirectionImage = new URL("./assets/service-direction.svg", import.meta.url).href;
+const serviceRefreshImage = new URL("./assets/service-refresh.svg", import.meta.url).href;
+const serviceLaunchImage = new URL("./assets/service-launch.svg", import.meta.url).href;
+
 const carouselContent = {
   products: [
     {
       type: "live",
-      image: "./assets/flow-reference.png",
+      image: flowReferenceImage,
       imageAlt: "Flow reference visual",
       title: "Flow Automator",
       description: "구글 Flow 이미지 자동생성기",
@@ -11,7 +18,7 @@ const carouselContent = {
     },
     {
       type: "live",
-      image: "./assets/product-prompt-length.webp",
+      image: promptLengthImage,
       imageAlt: "Prompt Length Matcher preview",
       title: "Prompt Length Matcher",
       description: "목표 글자 수에 정확히 맞을 때까지 문장을 자동으로 다듬어주는 프롬프트.",
@@ -20,7 +27,7 @@ const carouselContent = {
     },
     {
       type: "soon",
-      image: "./assets/product-next.svg",
+      image: productNextImage,
       imageAlt: "Next Piece teaser",
       title: "Next Piece",
       description: "다음 챕터를 위한 티저형 랜딩 구성안.",
@@ -30,7 +37,7 @@ const carouselContent = {
   services: [
     {
       type: "live",
-      image: "./assets/service-direction.svg",
+      image: serviceDirectionImage,
       imageAlt: "Direction Session visual",
       title: "Direction Session",
       description: "브랜드 톤과 랜딩 구조를 한 번에 정리하는 집중 세션.",
@@ -38,7 +45,7 @@ const carouselContent = {
     },
     {
       type: "soon",
-      image: "./assets/service-refresh.svg",
+      image: serviceRefreshImage,
       imageAlt: "Identity Refresh teaser",
       title: "Identity Refresh",
       description: "기존 브랜드 인상을 가볍게 재정렬하는 리프레시 서비스.",
@@ -46,7 +53,7 @@ const carouselContent = {
     },
     {
       type: "soon",
-      image: "./assets/service-launch.svg",
+      image: serviceLaunchImage,
       imageAlt: "Launch Companion teaser",
       title: "Launch Companion",
       description: "오픈 전후 디테일과 톤을 함께 맞추는 동행형 지원.",
@@ -340,6 +347,38 @@ function initHeroTilt() {
   visual.addEventListener("pointerleave", reset);
 }
 
+function initHeroScrollCue() {
+  const cue = document.querySelector("[data-hero-scroll-cue]");
+  const button = document.querySelector("[data-hero-scroll]");
+  const nextSection = document.getElementById("about");
+  if (!cue || !button || !nextSection) return;
+
+  button.addEventListener("click", () => {
+    nextSection.scrollIntoView({
+      behavior: reduceMotion ? "auto" : "smooth",
+      block: "start",
+    });
+  });
+
+  let ticking = false;
+
+  function update() {
+    const hidden = window.scrollY > Math.max(68, window.innerHeight * 0.09);
+    cue.classList.toggle("is-hidden", hidden);
+    ticking = false;
+  }
+
+  function requestUpdate() {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(update);
+  }
+
+  window.addEventListener("scroll", requestUpdate, { passive: true });
+  window.addEventListener("resize", requestUpdate);
+  update();
+}
+
 function initHeroNeuralCanvas() {
   const canvas = document.querySelector("[data-neural-canvas]");
   const visual = document.querySelector(".hero-visual");
@@ -546,4 +585,5 @@ initSectionObserver();
 initNavObserver();
 initHeroNeuralCanvas();
 initHeroTilt();
+initHeroScrollCue();
 initScrollTopButton();
