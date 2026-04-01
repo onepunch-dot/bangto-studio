@@ -243,7 +243,9 @@ main {
 
 .section-reveal:not(.hero) {
   --section-shift: 0px;
-  --enter-y: 22px;
+  --enter-y: 40px;
+  --enter-scale: 0.968;
+  --enter-blur: 10px;
   content-visibility: auto;
   contain: layout style;
   contain-intrinsic-size: auto 860px;
@@ -251,11 +253,11 @@ main {
 }
 
 .section-reveal.is-enter-from-top:not(.hero) {
-  --enter-y: -22px;
+  --enter-y: -40px;
 }
 
 .section-reveal.is-enter-from-bottom:not(.hero) {
-  --enter-y: 22px;
+  --enter-y: 40px;
 }
 
 .section-reveal:not(.hero)::after {
@@ -271,11 +273,13 @@ main {
 .section-reveal:not(.hero) .carousel-shell,
 .section-reveal:not(.hero) .contact-card {
   opacity: 0;
-  filter: none;
-  transform: translate3d(0, var(--enter-y), 0);
+  will-change: opacity, transform, filter;
+  filter: blur(var(--enter-blur)) saturate(0.9);
+  transform: translate3d(0, calc(var(--enter-y) + var(--section-shift)), 0) scale(var(--enter-scale));
   transition:
-    opacity 460ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 460ms cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 560ms cubic-bezier(0.2, 0.9, 0.24, 1),
+    transform 740ms cubic-bezier(0.2, 0.9, 0.24, 1),
+    filter 740ms cubic-bezier(0.2, 0.9, 0.24, 1);
 }
 
 .section-reveal.is-visible:not(.hero) .section-head,
@@ -283,8 +287,8 @@ main {
 .section-reveal.is-visible:not(.hero) .carousel-shell,
 .section-reveal.is-visible:not(.hero) .contact-card {
   opacity: 1;
-  filter: none;
-  transform: translate3d(0, 0, 0);
+  filter: blur(0) saturate(1);
+  transform: translate3d(0, var(--section-shift), 0) scale(1);
 }
 
 .hero-visual,
@@ -297,10 +301,14 @@ main {
   contain: layout style;
 }
 
+.section-reveal:not(.hero) .section-head {
+  transition-delay: 0ms;
+}
+
 .section-reveal:not(.hero) .about-layout,
 .section-reveal:not(.hero) .carousel-shell,
 .section-reveal:not(.hero) .contact-card {
-  transition-delay: 40ms;
+  transition-delay: 110ms;
 }
 
 main > .section-reveal + .section-reveal {

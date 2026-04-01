@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-label="OpenClaw setup visual">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="42%" r="38%">
+      <stop offset="0%" stop-color="#ff5a66" stop-opacity="0.38" />
+      <stop offset="100%" stop-color="#ff5a66" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="word" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ece9f6" />
+      <stop offset="100%" stop-color="#ff667f" />
+    </linearGradient>
+    <linearGradient id="bug" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ff6772" />
+      <stop offset="100%" stop-color="#f04f5d" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="1000" fill="#030406" />
+  <circle cx="800" cy="360" r="210" fill="url(#glow)" />
+
+  <g transform="translate(800 320)">
+    <ellipse cx="0" cy="0" rx="88" ry="110" fill="url(#bug)" />
+    <circle cx="-104" cy="-8" r="30" fill="#f65764" />
+    <circle cx="104" cy="-8" r="30" fill="#f65764" />
+    <rect x="-9" y="90" width="18" height="46" rx="7" fill="#f65764" />
+    <path d="M-38 -96 C-32 -124 -58 -136 -74 -146" fill="none" stroke="#ff7882" stroke-width="10" stroke-linecap="round" />
+    <path d="M38 -96 C32 -124 58 -136 74 -146" fill="none" stroke="#ff7882" stroke-width="10" stroke-linecap="round" />
+    <circle cx="-30" cy="-28" r="12" fill="#111216" />
+    <circle cx="30" cy="-28" r="12" fill="#111216" />
+  </g>
+
+  <text
+    x="800"
+    y="740"
+    text-anchor="middle"
+    fill="url(#word)"
+    font-family="Inter, Segoe UI, Arial, sans-serif"
+    font-size="176"
+    font-weight="800"
+    letter-spacing="-4"
+  >
+    OpenClaw
+  </text>
+</svg>

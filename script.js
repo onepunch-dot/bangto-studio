@@ -1,7 +1,7 @@
 const flowReferenceImage = new URL("./assets/flow-reference.png", import.meta.url).href;
 const promptLengthImage = new URL("./assets/product-prompt-length.webp", import.meta.url).href;
 const productNextImage = new URL("./assets/product-next.svg", import.meta.url).href;
-const serviceDirectionImage = new URL("./assets/service-direction.svg", import.meta.url).href;
+const serviceOpenclawImage = new URL("./assets/service-openclaw-setup.svg", import.meta.url).href;
 const serviceRefreshImage = new URL("./assets/service-refresh.svg", import.meta.url).href;
 const serviceLaunchImage = new URL("./assets/service-launch.svg", import.meta.url).href;
 
@@ -36,12 +36,13 @@ const carouselContent = {
   ],
   services: [
     {
-      type: "soon",
-      image: serviceDirectionImage,
-      imageAlt: "Service preview 01",
-      title: "Openclaw Setup",
-      description: "",
-      tag: "Comming soon",
+      type: "live",
+      image: serviceOpenclawImage,
+      imageAlt: "OpenClaw setup visual",
+      title: "오픈클로 설치",
+      description: "맥미니 없이 OpenClaw 설치해드립니다",
+      tags: ["OpenClaw", "Setup"],
+      link: "https://setup.go-openclaw.one",
     },
     {
       type: "soon",
@@ -348,7 +349,7 @@ function initSectionScrollFx() {
       const rect = section.getBoundingClientRect();
       const center = rect.top + rect.height * 0.5;
       const normalized = (center - viewport * 0.5) / viewport;
-      const shift = Math.max(-16, Math.min(16, normalized * 20));
+      const shift = Math.max(-24, Math.min(24, normalized * 28));
       section.style.setProperty("--section-shift", `${shift.toFixed(2)}px`);
     });
     ticking = false;
@@ -790,6 +791,7 @@ function initHeroNeuralCanvas() {
 
 document.querySelectorAll("[data-carousel]").forEach(initCarousel);
 initSectionObserver();
+initSectionScrollFx();
 initNavObserver();
 initHeroNeuralCanvas();
 initHeroTilt();
