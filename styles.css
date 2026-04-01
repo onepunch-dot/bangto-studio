@@ -327,7 +327,7 @@ main > .section-reveal + .section-reveal {
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: 8px;
   height: 34px;
   pointer-events: none;
   z-index: 14;
@@ -1851,6 +1851,7 @@ main > .section-reveal + .section-reveal {
   }
 
   .hero-scroll-band {
+    bottom: 6px;
     height: 28px;
   }
 
