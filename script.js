@@ -63,6 +63,59 @@ const carouselContent = {
 };
 
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const finePointer = window.matchMedia("(pointer: fine)").matches;
+const interactiveMotion = !reduceMotion && finePointer;
+const scrollState = {
+  active: false,
+  timeoutId: 0,
+};
+let wheelFallbackToken = 0;
+
+function normalizeWheelDelta(event) {
+  if (event.deltaMode === WheelEvent.DOM_DELTA_LINE) return event.deltaY * 18;
+  if (event.deltaMode === WheelEvent.DOM_DELTA_PAGE) return event.deltaY * window.innerHeight;
+  return event.deltaY;
+}
+
+function markScrollActivity() {
+  if (scrollState.timeoutId) {
+    window.clearTimeout(scrollState.timeoutId);
+  }
+
+  if (!scrollState.active) {
+    scrollState.active = true;
+  }
+
+  scrollState.timeoutId = window.setTimeout(() => {
+    scrollState.active = false;
+    scrollState.timeoutId = 0;
+  }, 140);
+}
+
+window.addEventListener("wheel", markScrollActivity, { passive: true });
+window.addEventListener("scroll", markScrollActivity, { passive: true });
+
+window.addEventListener(
+  "wheel",
+  (event) => {
+    if (event.ctrlKey || event.deltaY === 0) return;
+    const initialY = window.scrollY;
+    const delta = normalizeWheelDelta(event);
+    const token = ++wheelFallbackToken;
+
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        if (token !== wheelFallbackToken) return;
+        if (Math.abs(window.scrollY - initialY) > 0.5) return;
+        window.scrollBy({
+          top: delta,
+          behavior: "auto",
+        });
+      });
+    });
+  },
+  { passive: true }
+);
 
 function createCard(item, theme, index, total) {
   const article = document.createElement("article");
@@ -92,18 +145,51 @@ function createCard(item, theme, index, total) {
     </div>
   `;
 
-  if (!reduceMotion) {
-    article.addEventListener("mousemove", (event) => {
-      const rect = article.getBoundingClientRect();
-      const x = ((event.clientX - rect.left) / rect.width) * 100;
-      const y = ((event.clientY - rect.top) / rect.height) * 100;
-      article.style.setProperty("--mx", `${x.toFixed(2)}%`);
-      article.style.setProperty("--my", `${y.toFixed(2)}%`);
+  if (interactiveMotion) {
+    let frame = 0;
+    let rect = null;
+    let pendingX = 50;
+    let pendingY = 36;
+
+    function applySpotlight() {
+      frame = 0;
+      article.style.setProperty("--mx", `${pendingX.toFixed(2)}%`);
+      article.style.setProperty("--my", `${pendingY.toFixed(2)}%`);
+    }
+
+    function scheduleSpotlight() {
+      if (frame) return;
+      frame = window.requestAnimationFrame(applySpotlight);
+    }
+
+    article.addEventListener("pointerenter", () => {
+      rect = article.getBoundingClientRect();
     });
 
-    article.addEventListener("mouseleave", () => {
-      article.style.setProperty("--mx", "50%");
-      article.style.setProperty("--my", "36%");
+    article.addEventListener(
+      "pointermove",
+      (event) => {
+        if (scrollState.active) {
+          rect = null;
+          return;
+        }
+        rect ??= article.getBoundingClientRect();
+        pendingX = ((event.clientX - rect.left) / rect.width) * 100;
+        pendingY = ((event.clientY - rect.top) / rect.height) * 100;
+        scheduleSpotlight();
+      },
+      { passive: true }
+    );
+
+    article.addEventListener("pointerleave", () => {
+      if (frame) {
+        window.cancelAnimationFrame(frame);
+        frame = 0;
+      }
+      rect = null;
+      pendingX = 50;
+      pendingY = 36;
+      applySpotlight();
     });
   }
 
@@ -126,7 +212,9 @@ function initCarousel(root) {
   const currentTitle = root.querySelector("[data-current-title]");
   const currentIndex = root.querySelector("[data-index]");
   const buttons = root.querySelectorAll("[data-dir]");
+  const section = root.closest(".section-reveal");
   let active = 0;
+  let isInView = true;
   let timer = null;
 
   const cards = items.map((item, index) => {
@@ -160,7 +248,7 @@ function initCarousel(root) {
   }
 
   function startAuto() {
-    if (reduceMotion) return;
+    if (reduceMotion || !isInView) return;
     stopAuto();
     timer = window.setInterval(() => {
       go(1);
@@ -178,23 +266,69 @@ function initCarousel(root) {
   root.addEventListener("mouseenter", stopAuto);
   root.addEventListener("mouseleave", startAuto);
 
+  if (section) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        isInView = Boolean(entry?.isIntersecting);
+        if (isInView) {
+          startAuto();
+        } else {
+          stopAuto();
+        }
+      },
+      {
+        threshold: 0.2,
+      }
+    );
+
+    observer.observe(section);
+  }
+
   render();
   startAuto();
 }
 
 function initSectionObserver() {
-  const sections = document.querySelectorAll(".section-reveal");
+  const sections = Array.from(document.querySelectorAll(".section-reveal"));
+  if (!sections.length) return;
+
+  let lastY = window.scrollY;
+  let scrollDirection = "down";
+
+  function updateScrollDirection() {
+    const currentY = window.scrollY;
+    if (Math.abs(currentY - lastY) > 0.5) {
+      scrollDirection = currentY > lastY ? "down" : "up";
+      lastY = currentY;
+    }
+  }
+
+  window.addEventListener("scroll", updateScrollDirection, { passive: true });
+
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
+        const section = entry.target;
+        const isHero = section.classList.contains("hero");
+
+        if (!isHero) {
+          section.classList.toggle("is-enter-from-top", scrollDirection === "up");
+          section.classList.toggle("is-enter-from-bottom", scrollDirection !== "up");
         }
+
+        if (entry.isIntersecting) {
+          section.classList.add("is-visible");
+        } else if (!isHero) {
+          section.classList.remove("is-visible");
+        }
+
+        section.classList.toggle("is-live", entry.isIntersecting);
       });
     },
     {
-      threshold: 0.02,
-      rootMargin: "0px 0px -2% 0px",
+      threshold: 0.08,
+      rootMargin: "0px 0px -8% 0px",
     }
   );
 
@@ -298,6 +432,15 @@ function initHeroTilt() {
   const rippleLayer = document.querySelector("[data-hero-ripples]");
   if (!visual || !frame || !sculptureTilt || !rippleLayer) return;
 
+  if (!interactiveMotion) {
+    return;
+  }
+
+  let motionFrame = 0;
+  let rect = null;
+  let pointerX = 0.5;
+  let pointerY = 0.5;
+
   function spawnRipple(xPercent, yPercent, size = 140) {
     const ripple = document.createElement("span");
     ripple.className = "hero-ripple";
@@ -316,35 +459,59 @@ function initHeroTilt() {
     visual.style.setProperty("--hero-my", "50%");
   }
 
-  visual.addEventListener("pointerenter", () => {
+  function applyMotion() {
+    motionFrame = 0;
     visual.classList.add("is-active");
-  });
-
-  visual.addEventListener("pointermove", (event) => {
-    visual.classList.add("is-active");
-    const rect = visual.getBoundingClientRect();
-    const px = (event.clientX - rect.left) / rect.width;
-    const py = (event.clientY - rect.top) / rect.height;
-    const x = px - 0.5;
-    const y = py - 0.5;
-    visual.style.setProperty("--hero-mx", `${(px * 100).toFixed(2)}%`);
-    visual.style.setProperty("--hero-my", `${(py * 100).toFixed(2)}%`);
-
-    if (reduceMotion) return;
+    const x = pointerX - 0.5;
+    const y = pointerY - 0.5;
+    visual.style.setProperty("--hero-mx", `${(pointerX * 100).toFixed(2)}%`);
+    visual.style.setProperty("--hero-my", `${(pointerY * 100).toFixed(2)}%`);
     const rotateY = x * 7;
     const rotateX = y * -5;
     frame.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(0)`;
     sculptureTilt.style.transform = `rotateX(${rotateX * 1.2}deg) rotateY(${rotateY * 1.35}deg) translate3d(${x * 22}px, ${y * 18}px, 0)`;
+  }
+
+  function scheduleMotion() {
+    if (motionFrame) return;
+    motionFrame = window.requestAnimationFrame(applyMotion);
+  }
+
+  visual.addEventListener("pointerenter", () => {
+    rect = visual.getBoundingClientRect();
+    visual.classList.add("is-active");
   });
 
+  visual.addEventListener(
+    "pointermove",
+    (event) => {
+      if (scrollState.active) {
+        rect = null;
+        return;
+      }
+      rect ??= visual.getBoundingClientRect();
+      pointerX = (event.clientX - rect.left) / rect.width;
+      pointerY = (event.clientY - rect.top) / rect.height;
+      scheduleMotion();
+    },
+    { passive: true }
+  );
+
   visual.addEventListener("pointerdown", (event) => {
-    const rect = visual.getBoundingClientRect();
+    rect ??= visual.getBoundingClientRect();
     const xPercent = ((event.clientX - rect.left) / rect.width) * 100;
     const yPercent = ((event.clientY - rect.top) / rect.height) * 100;
     spawnRipple(xPercent, yPercent, 150 + Math.random() * 70);
   });
 
-  visual.addEventListener("pointerleave", reset);
+  visual.addEventListener("pointerleave", () => {
+    if (motionFrame) {
+      window.cancelAnimationFrame(motionFrame);
+      motionFrame = 0;
+    }
+    rect = null;
+    reset();
+  });
 }
 
 function initHeroScrollBand() {
@@ -371,9 +538,10 @@ function initHeroScrollBand() {
 }
 
 function initHeroNeuralCanvas() {
+  const hero = document.querySelector(".hero");
   const canvas = document.querySelector("[data-neural-canvas]");
   const visual = document.querySelector(".hero-visual");
-  if (!canvas || !visual) return;
+  if (!hero || !canvas || !visual) return;
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
@@ -387,6 +555,8 @@ function initHeroNeuralCanvas() {
   let width = 0;
   let height = 0;
   let raf = null;
+  let heroVisible = false;
+  let lastFrameTime = 0;
   let time = 0;
 
   const nodes = Array.from({ length: 70 }, () => ({
@@ -417,6 +587,7 @@ function initHeroNeuralCanvas() {
       pointer.x = width / 2;
       pointer.y = height / 2;
     }
+    renderScene();
   }
 
   function updatePointer(event) {
@@ -424,6 +595,7 @@ function initHeroNeuralCanvas() {
     pointer.x = event.clientX - rect.left;
     pointer.y = event.clientY - rect.top;
     pointer.active = true;
+    ensureAnimation();
   }
 
   function addBurst(clientX, clientY) {
@@ -434,6 +606,26 @@ function initHeroNeuralCanvas() {
       life: 1,
       radius: 24,
     });
+    ensureAnimation();
+  }
+
+  function shouldAnimate() {
+    return !reduceMotion && document.visibilityState === "visible" && (heroVisible || pointer.active || bursts.length > 0);
+  }
+
+  function stopAnimation() {
+    if (!raf) return;
+    window.cancelAnimationFrame(raf);
+    raf = null;
+  }
+
+  function ensureAnimation() {
+    if (!shouldAnimate()) {
+      stopAnimation();
+      return;
+    }
+    if (raf) return;
+    raf = window.requestAnimationFrame(draw);
   }
 
   function renderScene() {
@@ -479,13 +671,14 @@ function initHeroNeuralCanvas() {
       return { x, y, depth: node.depth };
     });
 
+    const linkDistance = 118;
     for (let i = 0; i < points.length; i += 1) {
       for (let j = i + 1; j < points.length; j += 1) {
         const dx = points[i].x - points[j].x;
         const dy = points[i].y - points[j].y;
         const dist = Math.hypot(dx, dy);
-        if (dist > 118) continue;
-        const alphaBase = 1 - dist / 118;
+        if (dist > linkDistance) continue;
+        const alphaBase = 1 - dist / linkDistance;
         const alpha = alphaBase * alphaBase * (0.03 + (points[i].depth + points[j].depth) * 0.12);
         const boosted = pointer.active ? alpha * 1.3 : alpha;
         ctx.strokeStyle = `rgba(166, 187, 255, ${boosted.toFixed(4)})`;
@@ -550,25 +743,49 @@ function initHeroNeuralCanvas() {
   }
 
   function draw(now) {
+    raf = null;
+    const frameInterval = scrollState.active ? 32 : 16;
+    if (lastFrameTime && now - lastFrameTime < frameInterval) {
+      raf = window.requestAnimationFrame(draw);
+      return;
+    }
+    lastFrameTime = now;
     time = now * 0.001;
     renderScene();
-    if (!reduceMotion) {
+    if (shouldAnimate()) {
       raf = window.requestAnimationFrame(draw);
     }
   }
 
-  visual.addEventListener("pointermove", updatePointer);
-  visual.addEventListener("pointerleave", () => {
-    pointer.active = false;
-  });
+  if (interactiveMotion) {
+    visual.addEventListener("pointermove", updatePointer, { passive: true });
+    visual.addEventListener("pointerleave", () => {
+      pointer.active = false;
+      ensureAnimation();
+    });
+    visual.addEventListener("pointerdown", (event) => {
+      addBurst(event.clientX, event.clientY);
+    });
+  }
 
-  visual.addEventListener("pointerdown", (event) => {
-    addBurst(event.clientX, event.clientY);
-  });
+  const observer = new IntersectionObserver(
+    (entries) => {
+      heroVisible = Boolean(entries[0]?.isIntersecting);
+      ensureAnimation();
+    },
+    {
+      threshold: 0.08,
+      rootMargin: "18% 0px 18% 0px",
+    }
+  );
+
+  observer.observe(hero);
+  document.addEventListener("visibilitychange", ensureAnimation);
 
   resize();
-  draw(0);
+  renderScene();
   window.addEventListener("resize", resize);
+  ensureAnimation();
 }
 
 document.querySelectorAll("[data-carousel]").forEach(initCarousel);

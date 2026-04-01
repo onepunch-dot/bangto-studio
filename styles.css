@@ -48,7 +48,7 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   word-break: keep-all;
-  overscroll-behavior-y: none;
+  overscroll-behavior-y: auto;
   overflow-x: hidden;
 }
 
@@ -243,7 +243,19 @@ main {
 
 .section-reveal:not(.hero) {
   --section-shift: 0px;
+  --enter-y: 22px;
+  content-visibility: auto;
+  contain: layout style;
+  contain-intrinsic-size: auto 860px;
   overflow: visible;
+}
+
+.section-reveal.is-enter-from-top:not(.hero) {
+  --enter-y: -22px;
+}
+
+.section-reveal.is-enter-from-bottom:not(.hero) {
+  --enter-y: 22px;
 }
 
 .section-reveal:not(.hero)::after {
@@ -260,7 +272,7 @@ main {
 .section-reveal:not(.hero) .contact-card {
   opacity: 0;
   filter: none;
-  transform: translate3d(0, 22px, 0);
+  transform: translate3d(0, var(--enter-y), 0);
   transition:
     opacity 460ms cubic-bezier(0.22, 1, 0.36, 1),
     transform 460ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -273,6 +285,16 @@ main {
   opacity: 1;
   filter: none;
   transform: translate3d(0, 0, 0);
+}
+
+.hero-visual,
+.hero-sculpture-stage,
+.about-layout,
+.carousel-shell,
+.orbit-scene,
+.orbit-track,
+.contact-card {
+  contain: layout style;
 }
 
 .section-reveal:not(.hero) .about-layout,
@@ -341,6 +363,26 @@ main > .section-reveal + .section-reveal {
   background: radial-gradient(55% 70% at 50% 100%, rgba(116, 145, 238, 0.34), rgba(116, 145, 238, 0) 72%);
   filter: blur(4px);
   animation: hero-band-glow 1.7s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+
+.hero:not(.is-live) .hero-scroll-band::before,
+.hero:not(.is-live) .hero-scroll-band::after,
+.hero:not(.is-live) .hero-sculpture,
+.hero:not(.is-live) .sculpture-ring-one,
+.hero:not(.is-live) .sculpture-ring-two,
+.hero:not(.is-live) .sculpture-ring-three,
+.hero:not(.is-live) .sculpture-ring-four,
+.hero:not(.is-live) .sculpture-core,
+.hero:not(.is-live) .blade-one,
+.hero:not(.is-live) .blade-two,
+.hero:not(.is-live) .blade-three,
+.hero:not(.is-live) .slab-one,
+.hero:not(.is-live) .slab-two,
+.hero:not(.is-live) .slab-three,
+.hero:not(.is-live) .sculpture-particle,
+.section-reveal:not(.is-live) .orbit-large,
+.section-reveal:not(.is-live) .orbit-small {
+  animation-play-state: paused;
 }
 
 .eyebrow,
@@ -499,6 +541,8 @@ main > .section-reveal + .section-reveal {
   overflow: visible;
   transform-style: preserve-3d;
   transition: transform 360ms ease;
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 .hero-visual-frame::before {
@@ -525,6 +569,8 @@ main > .section-reveal + .section-reveal {
   place-items: center;
   transform-style: preserve-3d;
   transition: transform 360ms ease;
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 .hero-sculpture {
@@ -570,6 +616,7 @@ main > .section-reveal + .section-reveal {
   width: 100%;
   height: 100%;
   border-radius: 50%;
+  transform: translateZ(0);
   filter:
     drop-shadow(0 0 26px rgba(128, 152, 255, 0.18))
     drop-shadow(0 0 18px rgba(231, 195, 176, 0.14));
@@ -1181,11 +1228,11 @@ main > .section-reveal + .section-reveal {
   opacity: 0.64;
 }
 
-.section-reveal.is-visible .orbit-large {
+.section-reveal.is-visible.is-live .orbit-large {
   animation: orbit-spin 26s linear infinite;
 }
 
-.section-reveal.is-visible .orbit-small {
+.section-reveal.is-visible.is-live .orbit-small {
   animation: orbit-spin-reverse 19s linear infinite;
 }
 
@@ -1304,10 +1351,9 @@ main > .section-reveal + .section-reveal {
   transition:
     transform 880ms cubic-bezier(0.22, 1, 0.36, 1),
     opacity 880ms cubic-bezier(0.22, 1, 0.36, 1),
-    filter 880ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 880ms cubic-bezier(0.22, 1, 0.36, 1),
     background 880ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform, opacity, filter;
+  will-change: transform, opacity;
 }
 
 .orbit-card::before,
@@ -1352,7 +1398,6 @@ main > .section-reveal + .section-reveal {
     rotateZ(-3deg)
     scale(0.79);
   opacity: 0.4;
-  filter: blur(1.4px) saturate(0.75);
   z-index: 1;
 }
 
@@ -1370,7 +1415,6 @@ main > .section-reveal + .section-reveal {
     rotateZ(3deg)
     scale(0.79);
   opacity: 0.44;
-  filter: blur(1.4px) saturate(0.76);
   z-index: 1;
 }
 
@@ -1394,7 +1438,6 @@ main > .section-reveal + .section-reveal {
     rotateZ(-2deg)
     scale(0.81);
   opacity: 0.56;
-  filter: blur(0.8px) saturate(0.9);
 }
 
 .orbit-card.is-right:hover {
@@ -1404,7 +1447,6 @@ main > .section-reveal + .section-reveal {
     rotateZ(2deg)
     scale(0.81);
   opacity: 0.58;
-  filter: blur(0.8px) saturate(0.9);
 }
 
 .card-visual {
@@ -1865,7 +1907,6 @@ main > .section-reveal + .section-reveal {
       rotateZ(-2deg)
       scale(0.66);
     opacity: 0.06;
-    filter: blur(3px) saturate(0.6);
     pointer-events: none;
   }
 
@@ -1876,7 +1917,6 @@ main > .section-reveal + .section-reveal {
       rotateZ(2deg)
       scale(0.66);
     opacity: 0.06;
-    filter: blur(3px) saturate(0.6);
     pointer-events: none;
   }
 
